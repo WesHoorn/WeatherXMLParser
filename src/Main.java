@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -12,15 +13,15 @@ public class Main {
     private static Closer closer;
     private static LocalDateTime starttime;
     public static ArrayList<Integer> stationlist;
+    public boolean success = false;
 
     // Start the server and run for x seconds
     public static void main (String[] args){
 
         try{
-        makeStationList();}
-        catch(IOException e){
-            System.out.println("Could not find stations.txt\nExiting...");
-            System.exit(0);
+        prepareStationList();}
+        catch(Exception e){
+            System.out.println("Could not find stations.txt in folder, looking in classpath...");
         }
 
         starttime = LocalDateTime.now();
@@ -46,10 +47,19 @@ public class Main {
         System.exit(0);
     }
 
-    private static void makeStationList () throws IOException {
-        ArrayList<Integer> list = new ArrayList<>();
+    public static void prepareStationList() throws IOException{
         File file = new File("stations.txt");
         Scanner sc = new Scanner(file, StandardCharsets.UTF_8);
+        makeStationList(sc);
+    }
+
+    public static void prepareStationList(InputStream stream)throws IOException{
+        Scanner sc = new Scanner(stream, StandardCharsets.UTF_8);
+        makeStationList(sc);
+    }
+
+    private static void makeStationList (Scanner sc) throws IOException {
+        ArrayList<Integer> list = new ArrayList<>();
         while (sc.hasNext()){
             String line = sc.nextLine();
 

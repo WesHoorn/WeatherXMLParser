@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -9,6 +11,12 @@ public class DataRemover implements Runnable {
     private boolean runbool = true;
 
     public DataRemover(){
+        InputStream stream = getClass().getResourceAsStream("stations.txt");
+        try{Main.prepareStationList(stream);}
+        catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Could not find stations.txt in classpath, perhaps it was found in folder?");
+        }
     }
 
     public void run(){

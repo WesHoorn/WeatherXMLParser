@@ -15,9 +15,8 @@ public class Server implements Runnable{
     //Open socket
     public Server(int port) {
         try{
-            System.out.println("Opening socket");
+            System.out.println("Opening socket...");
             this.serverSocket = new ServerSocket(port);
-            System.out.println("Success");
         } catch (IOException e){
             System.out.println("Could not open socket");
         }
@@ -34,8 +33,9 @@ public class Server implements Runnable{
 
         while (runbool){
             try{
-                System.out.println("Listening...");
+                System.out.println("Server listening...");
                 this.socket = serverSocket.accept();
+                System.out.println("Incoming data, connection accepted!");
             }
 
             catch(IOException ex){
