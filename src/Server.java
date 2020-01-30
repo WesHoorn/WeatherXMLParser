@@ -5,12 +5,12 @@ import java.net.Socket;
 import com.jcraft.jsch.*;
 
 //Must have its own thread to not make application hang while awaiting connection
-public class Server extends Thread{
+public class Server implements Runnable{
 
     private InputStream instream;
     private ServerSocket serverSocket;
     private Socket socket;
-    public volatile boolean runbool = true;
+    private boolean runbool = true;
 
     //Open socket
     public Server(int port) {
@@ -29,10 +29,10 @@ public class Server extends Thread{
 
     // For every new connection: new threaded parser instance
     public void run(){
-        boolean run = true;
+        System.out.println("Server running");
         int parsed = 0;
 
-        while (run){
+        while (runbool){
             try{
                 System.out.println("Listening...");
                 this.socket = serverSocket.accept();
@@ -52,9 +52,12 @@ public class Server extends Thread{
 
             parsed += 1;
             XMLParser parser = new XMLParser(instream);
-            parser.start();
+            new Thread(parser).start();
             System.out.println("Parsers opened:" + parsed);
+            //todo: threadpool/semaphore
         }
-
+    }
+    public void stop(){
+        this.runbool = false;
     }
 }
