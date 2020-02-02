@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,9 +16,7 @@ public class Main {
     public static ArrayList<Integer> stationlist;
     public boolean success = false;
 
-    // Start the server and run for x seconds
     public static void main (String[] args){
-
         try{
         prepareStationList();}
         catch(Exception e){
@@ -28,9 +27,11 @@ public class Main {
         server = new Server(7789);
         Thread serverthread = new Thread(server);
         serverthread.start();
-        closer = new Closer();
-        Thread closerthread = new Thread(closer);
-        closerthread.start();
+        if (!GraphicsEnvironment.isHeadless()){
+            closer = new Closer();
+            Thread closerthread = new Thread(closer);
+            closerthread.start();
+        }
         new Thread(new DataRemover()).start();
 
 
@@ -58,7 +59,7 @@ public class Main {
         makeStationList(sc);
     }
 
-    private static void makeStationList (Scanner sc) throws IOException {
+    private static void makeStationList (Scanner sc) {
         ArrayList<Integer> list = new ArrayList<>();
         while (sc.hasNext()){
             String line = sc.nextLine();

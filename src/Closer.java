@@ -29,7 +29,6 @@ public class Closer implements Runnable {
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         b.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent event) {
                 setRunBool();

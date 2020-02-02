@@ -60,12 +60,15 @@ public class XMLParser implements Runnable{
             int day = date.getDayOfMonth();
             this.name = date.getHour();
 
-            String pathname = "weatherdata/" + this.currentStn + "/" + year + "/" + month + "/" + day;
+            //String pathname = "parsedweatherdata/" + this.currentStn + "/" + year + "/" + month + "/" + day;
+            String pathname = "\\mnt\\weatherdata\\"+this.currentStn+"\\"+ year+"-"+month + "\\" + day;
             Boolean success = new File(pathname).mkdirs();
 
             //open output stream
             try{
-                File f = new File(pathname+"/"+name+".xml");
+                File f = new File(pathname+"\\"+name+".xml");
+                f.setWritable(true);
+                f.setReadable(true);
                 FileOutputStream fo = new FileOutputStream(f, true);
                 this.writer = new BufferedWriter(new OutputStreamWriter(fo));
             } catch(IOException e){e.printStackTrace();}
@@ -91,7 +94,7 @@ public class XMLParser implements Runnable{
             this.currentStn = splitline[0];
             this.foundStn = true;
         }
-        //data contains all global stations, must filter for relevant ones
+        //data stream contains all global stations, must filter for relevant ones
         if(!this.currentStn.isEmpty()){
             if (Main.stationlist.contains(Integer.parseInt(this.currentStn))){
                 // fetch/create file and write to it
@@ -109,7 +112,7 @@ public class XMLParser implements Runnable{
             }
         }
 
-        // end of file
+        // handling of end of measurement, line will have been wrtitten
         if (line.contains("</MEASUREMENT>")){
             this.end = true;
             this.foundStn = false;

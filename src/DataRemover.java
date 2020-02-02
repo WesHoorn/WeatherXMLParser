@@ -14,7 +14,6 @@ public class DataRemover implements Runnable {
         InputStream stream = getClass().getResourceAsStream("stations.txt");
         try{Main.prepareStationList(stream);}
         catch(Exception e){
-            e.printStackTrace();
             System.out.println("Could not find stations.txt in classpath, perhaps it was found in folder?");
         }
     }
@@ -34,12 +33,13 @@ public class DataRemover implements Runnable {
 
     private int check(){
         Date date = Calendar.getInstance().getTime();
-        long time = date.getTime();
+        long time = date.getTime();//in seconds since epoch for easy compare
         time = time - (90*24*60*60);//minus 90 days
         final long timetarget = time;
         int itemcount = 0;
         for(Integer station:Main.stationlist){
-            File path = new File(station+"/");
+            //File path = new File("parsedweatherdata/"+station+"/");
+            File path = new File("\\mnt\\weatherdata\\"+station);
             String[] directories = path.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File current, String name) {
@@ -53,7 +53,6 @@ public class DataRemover implements Runnable {
                     if (removed){itemcount++;}
                 }
             }
-
         }
         return itemcount;
     }
