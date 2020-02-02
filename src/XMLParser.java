@@ -129,7 +129,8 @@ public class XMLParser implements Runnable{
         }
         catch(IOException e){
         this.errorcount += 1;
-        System.out.println("\nIO Error while trying to write to file\nErrors for this instance: "+this.errorcount);
+        String name = Thread.currentThread().getName();
+        System.out.println("\nIO Error while trying to write to file\nErrors for instance "+name+": "+this.errorcount);
         }
 
     }

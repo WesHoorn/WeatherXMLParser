@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import com.jcraft.jsch.*;
@@ -16,7 +17,7 @@ public class Server implements Runnable{
     public Server(int port) {
         try{
             System.out.println("Opening socket...");
-            this.serverSocket = new ServerSocket(port);
+            this.serverSocket = new ServerSocket(port, 800, InetAddress.getLoopbackAddress());
         } catch (IOException e){
             System.out.println("Could not open socket");
         }
