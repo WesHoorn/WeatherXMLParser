@@ -15,6 +15,7 @@ public class Main {
     private static LocalDateTime starttime;
     public static ArrayList<Integer> stationlist;
     public boolean success = false;
+    private static boolean runbool = true;
 
     public static void main (String[] args){
         try{
@@ -27,19 +28,24 @@ public class Main {
         server = new Server(7789);
         Thread serverthread = new Thread(server);
         serverthread.start();
+        new Thread(new DataRemover()).start();
         if (!GraphicsEnvironment.isHeadless()){
             closer = new Closer();
             Thread closerthread = new Thread(closer);
             closerthread.start();
-        }
-        new Thread(new DataRemover()).start();
 
+            while (closer.getBool()){
+                try {Thread.sleep(1000);}
+                catch(InterruptedException e){e.printStackTrace();}
+                //todo: fetch and update errors for closer
 
-        while (closer.getBool()){
-            try {Thread.sleep(1000);}
-            catch(InterruptedException e){e.printStackTrace();}
-            //todo: fetch and update errors for closer
-
+            }
+        }else{
+            while (runbool){
+                try {Thread.sleep(5000);}
+                catch(InterruptedException e){e.printStackTrace();}
+                //todo: implement a way to quit
+            }
         }
         //tell server to stop after button press
         System.out.println("Stopping...");
