@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import com.jcraft.jsch.*;
@@ -19,7 +20,7 @@ public class Server implements Runnable{
             System.out.println("Opening socket...");
             //InetAddress lh = InetAddress.getByName("127.0.0.1");
             //this.serverSocket = new ServerSocket(port, 800, lh);
-            this.serverSocket = new ServerSocket(port);
+            this.serverSocket = new ServerSocket(port, 800, InetAddress.getLoopbackAddress());
             System.out.println("Socket opened on "+this.serverSocket.getLocalSocketAddress());
         } catch (IOException e){
             System.out.println("Could not open socket");
