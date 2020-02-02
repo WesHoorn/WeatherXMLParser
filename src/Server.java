@@ -17,7 +17,9 @@ public class Server implements Runnable{
     public Server(int port) {
         try{
             System.out.println("Opening socket...");
-            this.serverSocket = new ServerSocket(port, 800, InetAddress.getLoopbackAddress());
+            InetAddress lh = InetAddress.getByName("127.0.0.1");
+            this.serverSocket = new ServerSocket(port, 800, lh);
+            System.out.println("Socket opened on "+lh);
         } catch (IOException e){
             System.out.println("Could not open socket");
         }

@@ -37,7 +37,7 @@ public class XMLParser implements Runnable{
                 if(this.writer != null){
                     try{this.writer.close();}
                     catch(Exception e){
-                        System.out.println("Earlier: Error while closing writer");}
+                        System.out.println("Error while closing writer from main loop");}
                     }
                 this.end = false;
                 this.fileExists = false; //reset to 'unchekced'
@@ -46,8 +46,7 @@ public class XMLParser implements Runnable{
         }
         //close writer if/when stream stops
         try{this.writer.close();}
-        catch(IOException e){System.out.println("Later: Error while closing writer");
-        e.printStackTrace();}
+        catch(Exception e){System.out.println("Error while closing writer outside main loop: "+e.getClass());}
 
     }
 
