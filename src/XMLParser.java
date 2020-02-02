@@ -61,12 +61,12 @@ public class XMLParser implements Runnable{
             this.name = date.getHour();
 
             //String pathname = "parsedweatherdata/" + this.currentStn + "/" + year + "/" + month + "/" + day;
-            String pathname = "\\mnt\\weatherdata\\"+this.currentStn+"\\"+ year+"-"+month + "\\" + day;
+            String pathname = "/mnt/weatherdata/"+this.currentStn+"/"+ year+"-"+month + "/" + day;
             Boolean success = new File(pathname).mkdirs();
 
             //open output stream
             try{
-                File f = new File(pathname+"\\"+name+".xml");
+                File f = new File(pathname+"/"+name+".xml");
                 f.setWritable(true);
                 f.setReadable(true);
                 FileOutputStream fo = new FileOutputStream(f, true);

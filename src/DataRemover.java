@@ -39,7 +39,7 @@ public class DataRemover implements Runnable {
         int itemcount = 0;
         for(Integer station:Main.stationlist){
             //File path = new File("parsedweatherdata/"+station+"/");
-            File path = new File("\\mnt\\weatherdata\\"+station);
+            File path = new File("/mnt/weatherdata/"+station);
             String[] directories = path.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File current, String name) {
