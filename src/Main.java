@@ -26,10 +26,10 @@ public class Main {
 
         starttime = LocalDateTime.now();
 
-        //server = new Server(7789);
+        //server = new Server(60000);
         //Thread serverthread = new Thread(server);
         //serverthread.start();
-        server = new LocalSocket(7789);
+        server = new LocalSocket(60000);
         new Thread(server).start();
 
         new Thread(new DataRemover()).start();
