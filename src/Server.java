@@ -1,10 +1,9 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.jcraft.jsch.*;
+
 
 //Must have its own thread to not make application hang while awaiting connection
 public class Server implements Runnable{
@@ -27,10 +26,6 @@ public class Server implements Runnable{
         }
     }
 
-
-    public InputStream getIn(){
-        return this.instream;
-    }
 
     // For every new connection: new threaded parser instance
     public void run(){

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    private static Server server;
+    private static LocalSocket server;
     private static Closer closer;
     private static LocalDateTime starttime;
     public static ArrayList<Integer> stationlist;
@@ -25,9 +25,13 @@ public class Main {
         }
 
         starttime = LocalDateTime.now();
-        server = new Server(7789);
-        Thread serverthread = new Thread(server);
-        serverthread.start();
+
+        //server = new Server(7789);
+        //Thread serverthread = new Thread(server);
+        //serverthread.start();
+        server = new LocalSocket(7789);
+        new Thread(server).start();
+
         new Thread(new DataRemover()).start();
         if (!GraphicsEnvironment.isHeadless()){
             closer = new Closer();

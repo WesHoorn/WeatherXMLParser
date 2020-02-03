@@ -1,7 +1,10 @@
 <component name="libraryTable">
   <library name="jsch-0.1.54">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/jsch-0.1.54.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junixsocket-common-2.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junixsocket-core-2.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junixsocket-native-common-2.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junixsocket-server-2.3.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

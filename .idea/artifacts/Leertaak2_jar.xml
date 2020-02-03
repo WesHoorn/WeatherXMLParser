@@ -3,7 +3,10 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Leertaak2_jar</output-path>
     <root id="archive" name="Leertaak2.jar">
       <element id="module-output" name="Leertaak2" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jsch-0.1.54.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/junixsocket-common-2.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/junixsocket-core-2.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/junixsocket-native-common-2.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/junixsocket-server-2.3.1.jar" path-in-jar="/" />
       <element id="file-copy" path="$PROJECT_DIR$/stations.txt" />
     </root>
   </artifact>
