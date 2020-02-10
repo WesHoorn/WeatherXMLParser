@@ -11,7 +11,6 @@ public class LocalSocket implements Runnable {
     private Socket socket;
     private AFUNIXServerSocket server;
     private boolean runbool = true;
-    private long failcounter;
 
     //Open socket
     public LocalSocket(int port) {
@@ -35,31 +34,30 @@ public class LocalSocket implements Runnable {
         int parsed = 0;
 
         while (this.runbool) {
-
-            System.out.println("Waiting for connection...");
-            try {
-                this.socket = server.accept();
-                System.out.println("Connected: " + socket);
+            while (!Thread.interrupted()) {
+                System.out.println("Waiting for connection...");
                 try {
-                    instream = socket.getInputStream();
+                    socket = server.accept();
+                    System.out.println("Connected: " + socket);
+                    try {
+                        instream = socket.getInputStream();
+                    } catch (IOException e) {
+                        System.out.println("Failed to get stream from accepted connection");
+                    }
                 } catch (IOException e) {
-                    System.out.println("Failed to get stream from accepted connection");
+                    System.out.println("Failed to set up connection");
                 }
-            } catch (IOException e) {
-                this.failcounter++;
-                System.out.println("Failed to set up connection. Failure number: "+this.failcounter);
-            }
 
-            if (this.instream != null) {
-                parsed += 1;
-                XMLParser parser = new XMLParser(instream);
-                new Thread(parser).start();
-                System.out.println("Parsers opened:" + parsed);
-                this.instream = null;
+                if (this.instream != null) {
+                    parsed += 1;
+                    XMLParser parser = new XMLParser(instream);
+                    new Thread(parser).start();
+                    System.out.println("Parsers opened:" + parsed);
+                    this.instream = null;
+                }
             }
-        }
             //todo: threadpool/semaphore
-
+        }
     }
 
     public void stop(){
