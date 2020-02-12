@@ -2,7 +2,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Scanner;
 
@@ -59,18 +58,25 @@ public class XMLParser implements Runnable{
             int day = date.getDayOfMonth();
             this.name = date.getHour();
 
-            //String pathname = "parsedweatherdata/" + this.currentStn + "/" + year + "/" + month + "/" + day;
-            String pathname = "/mnt/weatherdata/"+this.currentStn+"/"+ year+"-"+month + "/" + day;
-            Boolean success = new File(pathname).mkdirs();
+            String pathname;
+            if (Main.os.contains("Windows")){
+                pathname = "parsedweatherdata\\" + this.currentStn + "\\" + year+"-"+ month + "\\" + day;
+                Boolean success = new File(pathname).mkdirs();
+            } else {
+                pathname = "/mnt/weatherdata/"+this.currentStn+"/"+ year+"-"+month + "/" + day;
+                Boolean success = new File(pathname).mkdirs();
+            }
 
             //open output stream
             try{
                 File f = new File(pathname+"/"+name+".xml");
-                f.setWritable(true);
-                f.setReadable(true);
+                //f.setWritable(true);
+                //f.setReadable(true);
                 FileOutputStream fo = new FileOutputStream(f, true);
                 this.writer = new BufferedWriter(new OutputStreamWriter(fo));
-            } catch(IOException e){e.printStackTrace();}
+            } catch(IOException e){System.out.println("Error while opening file");
+            e.printStackTrace();
+            }
 
             //Write all lines from before station is found
             while (this.queuedLines.peekFirst()!= null){
@@ -130,6 +136,9 @@ public class XMLParser implements Runnable{
         this.errorcount += 1;
         String name = Thread.currentThread().getName();
         System.out.println("\nIO Error while trying to write to file\nErrors for instance "+name+": "+this.errorcount);
+        }
+        catch(NullPointerException e2){
+            System.out.println("Tried and failed to write an empty line");
         }
 
     }

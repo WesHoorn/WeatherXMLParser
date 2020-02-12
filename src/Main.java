@@ -3,19 +3,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    private static LocalSocket server;
+    public static String os;
     private static Closer closer;
     private static LocalDateTime starttime;
     public static ArrayList<Integer> stationlist;
     public boolean success = false;
     private static boolean runbool = true;
+    private static Server server;
 
     public static void main (String[] args){
         try{
@@ -24,13 +23,15 @@ public class Main {
             System.out.println("Could not find stations.txt in folder, looking in classpath...");
         }
 
+        os = System.getProperties().getProperty("os.name");
+        System.out.println(os);
         starttime = LocalDateTime.now();
 
-        //server = new Server(60000);
-        //Thread serverthread = new Thread(server);
-        //serverthread.start();
-        server = new LocalSocket(60000);
-        new Thread(server).start();
+        server = new Server(7789);
+        Thread serverthread = new Thread(server);
+        serverthread.start();
+        //server = new LocalSocket(60000);
+        //new Thread(server).start();
 
         new Thread(new DataRemover()).start();
         if (!GraphicsEnvironment.isHeadless()){
