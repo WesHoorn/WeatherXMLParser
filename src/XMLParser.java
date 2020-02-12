@@ -1,5 +1,7 @@
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -59,23 +61,32 @@ public class XMLParser implements Runnable{
             this.name = date.getHour();
 
             String pathname;
+            boolean windows;
             if (Main.os.contains("Windows")){
+                windows = true;
                 pathname = "parsedweatherdata\\" + this.currentStn + "\\" + year+"-"+ month + "\\" + day;
                 Boolean success = new File(pathname).mkdirs();
             } else {
-                pathname = "/mnt/weatherdata/"+this.currentStn+"/"+ year+"-"+month + "/" + day;
+                windows = false;
+                pathname = "/home/pi/mnt/weatherdata/"+this.currentStn+"/"+ year+"-"+month + "/" + day;
                 Boolean success = new File(pathname).mkdirs();
             }
 
             //open output stream
+            File f;
             try{
-                File f = new File(pathname+"/"+name+".xml");
-                //f.setWritable(true);
-                //f.setReadable(true);
+                if (!windows){
+                    f = new File(pathname+"/"+name+".xml");
+                    Files.setPosixFilePermissions(f.toPath(), PosixFilePermissions.fromString("-rw-rw-rw-"));
+                }else{
+                    f = new File(pathname+"\\"+name+".xml");
+                    f.setWritable(true);
+                    f.setReadable(true);
+                }
                 FileOutputStream fo = new FileOutputStream(f, true);
                 this.writer = new BufferedWriter(new OutputStreamWriter(fo));
             } catch(IOException e){System.out.println("Error while opening file");
-            e.printStackTrace();
+                e.printStackTrace();
             }
 
             //Write all lines from before station is found
