@@ -77,7 +77,7 @@ public class XMLParser implements Runnable{
             try{
                 if (!windows){
                     f = new File(pathname+"/"+name+".xml");
-                    Files.setPosixFilePermissions(f.toPath(), PosixFilePermissions.fromString("-rw-rw-rw-"));
+                    Files.setPosixFilePermissions(f.toPath(), PosixFilePermissions.fromString("rw-rw-rw-"));
                 }else{
                     f = new File(pathname+"\\"+name+".xml");
                     f.setWritable(true);
