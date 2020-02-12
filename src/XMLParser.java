@@ -16,6 +16,7 @@ public class XMLParser implements Runnable{
     private volatile BufferedWriter writer;
     private String currentStn = "";
     private Deque<String> queuedLines;
+    private int second;
 
     //Booleans for line handling and file creation logic
     private Boolean end = false;
@@ -59,6 +60,7 @@ public class XMLParser implements Runnable{
             int month = date.getMonth().getValue();
             int day = date.getDayOfMonth();
             this.name = date.getHour();
+            this.second = date.getSecond();
 
             String pathname;
             boolean windows;
@@ -96,7 +98,7 @@ public class XMLParser implements Runnable{
         }
     }
 
-
+    //called for every line in the inputstream as some essential logic is dependant on its contents
     private void handleLine(String line){
         //do not save semi-unnecessary overhead
         if (line.contains("WEATHERDATA") || line.contains("?")){
@@ -144,12 +146,17 @@ public class XMLParser implements Runnable{
             this.writer.flush();
         }
         catch(IOException e){
-        this.errorcount += 1;
-        String name = Thread.currentThread().getName();
-        System.out.println("\nIO Error while trying to write to file\nErrors for instance "+name+": "+this.errorcount);
+            this.errorcount += 1;
+            String name = Thread.currentThread().getName();
+            System.out.println("\nIO Error while trying to write to file\nErrors for instance "+name+": "+this.errorcount+
+                "\nthis happened while writing to station "+currentStn+" around second "+this.second);
         }
         catch(NullPointerException e2){
             System.out.println("Tried and failed to write an empty line");
+        }
+
+        catch(StackOverflowError e3){
+            System.out.println("Something overflowed!");
         }
 
     }
