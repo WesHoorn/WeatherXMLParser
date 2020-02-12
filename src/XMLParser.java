@@ -76,18 +76,21 @@ public class XMLParser implements Runnable{
 
             //open output stream
             File f;
+            boolean created =false;
             try{
                 if (!windows){
                     f = new File(pathname+"/"+name+".xml");
                     Files.setPosixFilePermissions(f.toPath(), PosixFilePermissions.fromString("rw-rw-rw-"));
+                    created = f.createNewFile();
                 }else{
                     f = new File(pathname+"\\"+name+".xml");
+                    created = f.createNewFile();
                     f.setWritable(true);
                     f.setReadable(true);
                 }
                 FileOutputStream fo = new FileOutputStream(f, true);
                 this.writer = new BufferedWriter(new OutputStreamWriter(fo));
-            } catch(IOException e){System.out.println("Error while opening file");
+            } catch(IOException e){System.out.println("Error while opening file"+"\nFile creation success: "+ created);
                 e.printStackTrace();
             }
 
