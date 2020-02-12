@@ -48,7 +48,7 @@ public class XMLParser implements Runnable{
         }
         //close writer if/when stream stops
         try{this.writer.close();}
-        catch(Exception e){System.out.println("Error while closing writer outside main loop: "+e.getClass());}
+        catch(Exception e){System.out.println("Could not close writer, may have been closed earlier: "+e.getClass());}
 
     }
 
@@ -63,16 +63,19 @@ public class XMLParser implements Runnable{
             this.second = date.getSecond();
 
             String pathname;
+            boolean success;
             boolean windows;
             if (Main.os.contains("Windows")){
                 windows = true;
                 pathname = "parsedweatherdata\\" + this.currentStn + "\\" + year+"-"+ month + "\\" + day;
-                Boolean success = new File(pathname).mkdirs();
+                success = new File(pathname).mkdirs();
             } else {
                 windows = false;
                 pathname = "/home/pi/mnt/weatherdata/"+this.currentStn+"/"+ year+"-"+month + "/" + day;
-                Boolean success = new File(pathname).mkdirs();
+                success = new File(pathname).mkdirs();
             }
+            System.out.println("Directory creation success: "+success+"\nAble to write to new dir: "+
+                    new File(pathname).canWrite());
 
             //open output stream
             File f;
