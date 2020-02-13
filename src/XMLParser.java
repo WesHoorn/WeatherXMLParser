@@ -12,7 +12,6 @@ public class XMLParser implements Runnable{
     private InputStream stream;
 
     private int name; //=hour
-    private int errorcount;
     private volatile BufferedWriter writer;
     private String currentStn = "";
     private Deque<String> queuedLines;
@@ -74,8 +73,7 @@ public class XMLParser implements Runnable{
                 pathname = "/home/pi/mnt/weatherdata/"+this.currentStn+"/"+ year+"-"+month + "/" + day;
                 success = new File(pathname).mkdirs();
             }
-            System.out.println("Directory creation success: "+success+"\nAble to write to new dir: "+
-                    new File(pathname).canWrite());
+            //System.out.println("Directory creation success: "+success+"\nAble to write to new dir: "+new File(pathname).canWrite());
 
             //open output stream
             File f;
@@ -93,7 +91,7 @@ public class XMLParser implements Runnable{
                 }
                 FileOutputStream fo = new FileOutputStream(f, true);
                 this.writer = new BufferedWriter(new OutputStreamWriter(fo));
-            } catch(IOException e){System.out.println("Error while opening file"+"\nFile creation success: "+ created);
+            } catch (IOException e) {//System.out.println("Error while opening file"+"\nFile creation success: "+ created);
                 e.printStackTrace();
             }
 
@@ -152,19 +150,13 @@ public class XMLParser implements Runnable{
             this.writer.flush();
         }
         catch(IOException e){
-            this.errorcount += 1;
             String name = Thread.currentThread().getName();
-            System.out.println("\nIO Error while trying to write to file\nErrors for instance "+name+": "+this.errorcount+
+            System.out.println("\nIO Error while trying to write to file in " + name +
                 "\nthis happened while writing to station "+currentStn+" around second "+this.second);
         }
         catch(NullPointerException e2){
             System.out.println("Tried and failed to write an empty line");
         }
-
-        catch(StackOverflowError e3){
-            System.out.println("Something overflowed!");
-        }
-
     }
 
 }
