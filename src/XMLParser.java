@@ -14,8 +14,7 @@ public class XMLParser implements Runnable{
     private int name; //=hour
     private volatile BufferedWriter writer;
     private String currentStn = "";
-    private Deque<String> queuedLines;
-    private int second;
+    private String prevline = "";
 
     //Booleans for line handling and file creation logic
     private Boolean end = false;
@@ -25,7 +24,6 @@ public class XMLParser implements Runnable{
 
     public XMLParser(InputStream stream){
         this.stream = stream;
-        this.queuedLines = new ArrayDeque<>();
     }
 
     @Override
@@ -59,7 +57,6 @@ public class XMLParser implements Runnable{
             int month = date.getMonth().getValue();
             int day = date.getDayOfMonth();
             this.name = date.getHour();
-            this.second = date.getSecond();
 
             String pathname;
             boolean success;
@@ -94,11 +91,6 @@ public class XMLParser implements Runnable{
             } catch (IOException e) {//System.out.println("Error while opening file"+"\nFile creation success: "+ created);
                 e.printStackTrace();
             }
-
-            //Write all lines from before station is found
-            while (this.queuedLines.peekFirst()!= null){
-                out(this.queuedLines.removeFirst());
-            }
         }
     }
 
@@ -123,13 +115,10 @@ public class XMLParser implements Runnable{
                 if (this.foundStn){
                     if (!this.fileExists){
                         fileHandle();
+                        out("\t<MEASUREMENT>");
                         this.fileExists = true;}
 
                     out(line);
-                }
-                // if not found station number: add to queue
-                else{
-                    this.queuedLines.add(line);
                 }
             }
         }
@@ -145,18 +134,23 @@ public class XMLParser implements Runnable{
     //write 1 line to currently opened file
     private void out(String line){
         try{
-            this.writer.write(line);
-            this.writer.newLine();
-            this.writer.flush();
+            if (!((this.prevline.contains("<MEASUREMENT>") && (!this.prevline.contains("/"))) && line.contains("<MEASUREMENT>"))){
+                this.writer.write(line);
+                this.writer.newLine();
+                this.writer.flush();
+            }
         }
         catch(IOException e){
             String name = Thread.currentThread().getName();
             System.out.println("\nIO Error while trying to write to file in " + name +
-                "\nthis happened while writing to station "+currentStn+" around second "+this.second);
+                "\nthis happened while writing to station "+this.currentStn+" around "+LocalDateTime.now()
+            +".\n Tried to write: "+line +".\nThe previous line was: "+this.prevline);
+            this.prevline = "<MEASUREMENT>";
         }
         catch(NullPointerException e2){
-            System.out.println("Tried and failed to write an empty line");
+            System.out.println("Failed to write an empty line");
         }
+        this.prevline = line;
     }
 
 }
